@@ -137,7 +137,7 @@ while [ "$selection" != "Q" ]; do
 			if [ $stop -eq 0 ]; then
 				./start_logger.sh "$(cat $fid)" "$delay" "$(cat $fres1)"
 				sleep 0.3s
-				./status.sh "$(cat $fid)" --convert01offon > $ftxt
+				./status.sh -c -v "$(cat $fid)"  > $ftxt
 				dialog --title "Setup for deployment - Status of iButton $(cat $fid)" \
 					--backtitle "$backtitle" \
 					--textbox $ftxt 40 80
@@ -150,7 +150,7 @@ while [ "$selection" != "Q" ]; do
 			if [ $? -eq 0 ]; then
 				id=$(cat $fid)
 				idn=$(id_lookup $id)
-				./status.sh "$id" --convert01offon > $ftxt
+				./status.sh -c -v "$id" > $ftxt
 				dialog --title "Status of iButton $id $idn" \
 					--backtitle "$backtitle" \
 					--textbox $ftxt 40 80
