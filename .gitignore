@@ -1,0 +1,5 @@
+script/config.sh
+script/rrdtool.exe
+test_old/
+htdocs/smarty/cache
+htdocs/smarty/templates_c

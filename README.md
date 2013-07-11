@@ -1,3 +1,0 @@
-Thermocron iButton Manager
-==========================
-
