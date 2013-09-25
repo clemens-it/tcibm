@@ -39,8 +39,7 @@ default_memory_content="This is property of My Company.\nMy Company, Subdivision
 upload_data=0
 # URL to upload the data to
 upload_url="https://www.example.com/TemperatureLogging/upload.php?action=templog&subaction=upload_results"
-# additional parameters for curl
-# more parameters for curl. e.g. --insecure if using https with a self signed certificate
+# additional parameters for curl, e.g. --insecure if using https with a self signed certificate
 #curl_params="--insecure"
 curl_params=""
 
