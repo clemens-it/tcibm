@@ -10,7 +10,7 @@ if (isset($_REQUEST['subaction'])) {
 					continue;
 				unset($m);
 				//templog-2012-10-31_14.09-21.EC042E000000-blue_2.txt
-				if (!preg_match('/^templog-([\d-]+)_([\d\.]+)-([a-f\d\.]+)-(.*)?\.txt$/i', $file, $m))
+				if (!preg_match('/^templog-([\d-]+)_([\d\.]+)-([a-f\d\.]+)-([^-]*)?-?(.*)?\.txt$/i', $file, $m))
 					$m = array('', '-', '-', '-', $file);
 				unset($m[0]);
 				$data[$file] = $m;
@@ -19,6 +19,7 @@ if (isset($_REQUEST['subaction'])) {
 			krsort($data);
 		}
 		closedir($dh);
+		$smarty->assign('count_data', count($data));
 		$smarty->assign('data', $data);
 		$smarty_view = 'result.tpl';
 	} // subaction == upload_results
@@ -48,8 +49,8 @@ if (isset($_REQUEST['subaction'])) {
 		} //while each hdr
 		fclose($fh);
 
-		$cachedir = allocCache('tlog');
-		$cachepath = $cfg['cacheRootDir'].'/'.$cachedir;
+		$cachepath = allocCache('tlog');
+		$cachepath = $cfg['cacheRootDir'].'/'.$cachepath;
 		$rrde=array();
 		$rrde['rrdstart'] = escapeshellarg($rrd['missionstart']-$rrd['frequency']);
 		$rrde['missionstart'] = escapeshellarg($rrd['missionstart']);
@@ -96,8 +97,6 @@ if (isset($_REQUEST['subaction'])) {
 			'COMMENT:" \l" '.
 			'COMMENT:"'.$fnl.', Frequency[sec]\: '.$rrd['frequency'].', Log Elements\: '.$rrd['elements'].'\l" '.
 			'COMMENT:"Mission from '.$missioninfo.'\l" ';
-			'HRULE:0#0000ff '.
-			'HRULE:10#0000ff';
 		$cmd .= "HRULE:{$cfg['graph_upper_limit']}{$cfg['graph_upper_limit_color']} ".
 			"HRULE:{$cfg['graph_lower_limit']}{$cfg['graph_lower_limit_color']}";
 		$cmd .= " 2>&1";
@@ -107,7 +106,8 @@ if (isset($_REQUEST['subaction'])) {
 			die("Error while generating graph '$fngraph' from rrdb '$fnrrd'");
 		}
 
-		$smarty->assign('fngraph', $cfg['cacheRootUrl'].'/'.$cachedir.'/'.$urigraph);
+		//assign image file path (not url) to smarty var fngraph. using {html_image } in template
+		$smarty->assign('fngraph', $cachepath.'/'.$urigraph);
 		$smarty_view = 'graph.tpl';
 	} //subaction == showchart
 
