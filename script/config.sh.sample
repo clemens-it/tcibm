@@ -34,6 +34,16 @@ graph_llimit_color=#0000ff
 # default memory content displayed in dialog window when writing memory of thermocron iButton
 default_memory_content="This is property of My Company.\nMy Company, Subdivision in City (Country).\n"
 
+
+# additional description for temperature log filenames
+logfn_ask_add_info=0
+# use precompiled list for additional description
+logfn_precompiled_entries=( "Hot Transport" "Cold Transport" )
+# limited to precompiled list; if not, "Other" will be added and text field will appear if this tag is selected
+logfn_limit_to_precompiled=0
+# additional filename description required?
+logfn_add_info_required=0
+
 # wheter to upload the data to the corresponding upload.php-script running on a websever. 0..disable, 1..enable
 # upload requires curl
 upload_data=0
