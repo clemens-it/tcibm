@@ -119,5 +119,5 @@ if [ -z "$upload_data" ]; then
 	upload_data=0
 fi
 if [ $upload_data -eq 1 ]; then
-	curl $curl_params --form templog=@$bfn.txt "$upload_url"
+	curl $curl_params --form templog=@"$bfn.txt" "$upload_url"
 fi
