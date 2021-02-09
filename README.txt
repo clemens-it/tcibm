@@ -27,7 +27,7 @@ Scripts providing a user interface
 Cygwin shortcut files
 ---------------------
 The purpose of this files is to be called with mintty.exe in an CygWin environment
-by creating a direct shortcut to the following target: 
+by creating a direct shortcut to the following target:
  C:\wherever-cygwin-is-installed\bin\mintty.exe -he -e /wherever-tcibm-is-installed/cwibmmenu.sh
 	cwibmmenu.sh
 	cwquickstart.sh
@@ -36,7 +36,7 @@ by creating a direct shortcut to the following target:
 
 Single scripts
 --------------
-- used by the UI-scripts but may be also used on the command line 
+- used by the UI-scripts but may be also used on the command line
 - call ows_prepare_start.sh before using them and ows_stop.sh afterwards to start/stop the
   required owserver
 
