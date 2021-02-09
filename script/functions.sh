@@ -2,7 +2,7 @@
 function id_register() {
 	local id=$1
 	local description=$2
-	
+
 	tmpdb=$(mktemp -t tmp.ibm.XXXXXXXX)
 	grep -v "^$id" "$regdb" | grep -v "^$" > $tmpdb
 	echo -e "$id\t$description" >> $tmpdb
@@ -20,7 +20,7 @@ function id_lookup() {
 
 function list_ids() {
 	local ids=$(./find_id.sh -u )
-	echo "$ids" | while read id; do 
+	echo "$ids" | while read id; do
 		if [ ! -z "$id" ]; then
 			echo -ne "$id \"$(id_lookup $id)\" "
 		fi
@@ -39,7 +39,7 @@ function start_ow_server() {
 function stop_ow_server() {
 	pgrep owserver > /dev/null
 	if [ $? -eq 0 ]; then
-		pgrep owserver | xargs kill -9 
+		pgrep owserver | xargs kill -9
 	fi
 }
 
@@ -93,14 +93,14 @@ function logfn_add_info () {
 				if [ $? -ne 0 ]; then
 					return 1
 				fi
-				# for the case that "Other ..." was selected set an appropriate 
+				# for the case that "Other ..." was selected set an appropriate
 				# message for the input box
 				msg="Other ... Please specify"
 				fnres=$(cat $ffnaddinfo)
 			else
-				# in case list of entries is empty, come up with a input box - the same 
+				# in case list of entries is empty, come up with a input box - the same
 				# as if "Other ..." had been choosen. set also message for input box
-				fnres="Other ..." 
+				fnres="Other ..."
 				msg=""
 			fi
 			if [ "$fnres" == "Other ..." ]; then
@@ -119,7 +119,7 @@ function logfn_add_info () {
 			else
 				ask_done=1
 			fi
-		done	
+		done
 		# clean file name, first trim, then replace all invalid chars with _
 		echo -n $fnres | sed -e 's/^ *//g' -e 's/( )*$//g' | tr -cs "[:alnum:]-_." _ > $ffnaddinfo
 	fi

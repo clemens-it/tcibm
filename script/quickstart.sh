@@ -13,7 +13,7 @@ if [ $? -ne 0 ]; then
 	dialog --title "Thermochron iButton Manager - Startup" \
 		--backtitle "$backtitle" \
 		--msgbox "$msg" 9 60
-	exit	
+	exit
 fi
 
 fres1=$(mktemp -t tmp.ibm.XXXXXXXX)
@@ -37,7 +37,7 @@ fi
 
 echo -ne "" > $ftxt #init $ftxt
 ./find_id.sh -u >$fid
-txt="The following iButtons will be reset and set up for immediate deployment:\n\n $(list_ids)\n\nDo you really want to continue?"  
+txt="The following iButtons will be reset and set up for immediate deployment:\n\n $(list_ids)\n\nDo you really want to continue?"
 dialog --title "Thermochron iButton Manager - Quick Start" \
 	--backtitle "$backtitle" \
 	--yesno "$txt" 14 65 \
@@ -62,7 +62,7 @@ if [ $? -eq 0 ]; then
 			dialog --title "Setting up iButtons for deployment" \
 				--backtitle "$backtitle" \
 				--infobox "\n\nPlease wait while iButtons are programmed ..." 7 60
-			$wwrite "$id/mission/rollover" 0 
+			$wwrite "$id/mission/rollover" 0
 			./start_logger.sh "$id" "$delay" "$freq"
 			sleep 0.3s
 			./status.sh "$id" >> $ftxt

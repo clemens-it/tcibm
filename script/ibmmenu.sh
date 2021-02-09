@@ -15,7 +15,7 @@ if [ $? -ne 0 ]; then
 	dialog --title "Thermochron iButton Manager - Startup" \
 		--backtitle "$backtitle" \
 		--msgbox "$msg" 8 60
-	exit	
+	exit
 fi
 
 fres1=$(mktemp -t tmp.ibm.XXXXXXXX)
@@ -49,7 +49,7 @@ while [ "$selection" != "Q" ]; do
 		selection=Q
 	else
 		selection=$(cat $fres1)
-	fi	
+	fi
 
 	ids=$(list_ids)
 	if [ -z "$ids" -a "$selection" != "Q" ]; then
@@ -140,7 +140,7 @@ while [ "$selection" != "Q" ]; do
 					dialog --title "Setup iButton for deployment" \
 						--backtitle "$backtitle" \
 						--msgbox "$msg" 8 60
-						
+
 				fi
 			fi
 

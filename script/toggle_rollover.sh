@@ -11,7 +11,7 @@ p=$1
 
 mr=$($wread "$p/mission/rollover")
 if [ "$mr" == "0" ]; then
-	nmr=1	
+	nmr=1
 fi
 if [ "$mr" == "1" ]; then
 	nmr=0
