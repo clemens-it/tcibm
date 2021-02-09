@@ -31,7 +31,7 @@ function list_ids() {
 function start_ow_server() {
 	pgrep owserver > /dev/null
 	if [ $? -ne 0 ]; then
-		owserver -u -p $owserverport
+		owserver -u -p $owserverport --foreground &
 	fi
 }
 
