@@ -1,5 +1,5 @@
 <?php
-//Code written by DeY 
+//Code written by DeY
 
 require_once("io.php");
 
@@ -74,5 +74,3 @@ function validCacheId($id)
   return (preg_match("/^[0-9]{14}-[^\/]+$/", $id)
        && posix_access("$cacheRootDir/$id"));
 }
-
-?>

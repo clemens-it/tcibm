@@ -1,5 +1,5 @@
 <?php
-//Code written by DeY 
+//Code written by DeY
 
 function rmtree($root)
 {
@@ -30,5 +30,3 @@ function fgetl($fd)
   $line = fgets($fd);
   return ($line === FALSE? $line: rtrim($line));
 }
-
-?>

@@ -82,7 +82,7 @@ if (isset($_REQUEST['subaction'])) {
 
 		//generate graph
 		$graphwidth = 900; $graphheight = 500;
-		$missioninfo = str_replace(':', '\:', date("Y-m-d H:i", $rrd['missionstart'])." to ". 
+		$missioninfo = str_replace(':', '\:', date("Y-m-d H:i", $rrd['missionstart'])." to ".
 			date("Y-m-d H:i", $rrd['missionend']));
 		$fnl = basename($_GET['file'], '.txt');
 		$cmd  = "rrdtool graph $fngraph --width $graphwidth --height $graphheight --start {$rrde['missionstart']} ";
@@ -112,5 +112,3 @@ if (isset($_REQUEST['subaction'])) {
 	} //subaction == showchart
 
 } //isset $_REQUEST['subaction']
-
-?>
