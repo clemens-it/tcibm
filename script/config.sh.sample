@@ -13,13 +13,16 @@ outputfnbase=templog
 # path and filename of registry-database
 regdb=$datapath/regdb.txt
 
+#
+# create graph using rrdtool
+rrd_create_graph=0
+#
 # path and filename for rrdtool binary
-#  set to rrdtool in a Linux environment hwere rrdtool is accessible within the PATH
+#  set to rrdtool in a Linux environment where rrdtool is accessible within the PATH
 #rrdtool=rrdtool
 #  Cygwin: download the rrdtool binary for windows, copy it to your favorite place
 #  and let the variable point to it.
 rrdtool=./rrdtool
-
 
 # width and height for image produces by rrdtool graph
 graphwidth=900
@@ -30,6 +33,7 @@ graph_upperlimit=10
 graph_lowerlimit=0
 graph_ulimit_color=#0000ff
 graph_llimit_color=#0000ff
+
 
 # default memory content displayed in dialog window when writing memory of thermocron iButton
 default_memory_content="This is property of My Company.\nMy Company, Subdivision in City (Country).\n"

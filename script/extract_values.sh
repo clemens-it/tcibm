@@ -12,6 +12,20 @@ p="$1"
 bfn="$2"
 l="$p/log"
 
+
+# if $rrd_create_graph ist not configured, set to 0
+if [ -z "$rrd_create_graph" ]; then
+	rrd_create_graph=0
+fi
+
+
+# if $upload_data ist not configured, set to 0
+if [ -z "$upload_data" ]; then
+	upload_data=0
+fi
+
+
+#read values from iButton
 datestart=$($wread "$p/mission/date")
 
 freq=$($wread "$p/mission/frequency")
@@ -47,10 +61,6 @@ else
 	((missionstart=missionend-elements*freq*60))
 fi
 
-#variables for rrd
-((rrdstep=freq*60))
-((rrdstart=missionstart-rrdstep))
-rrdheartbeat=$rrdstep
 
 tmpf=$(mktemp -t tmp.ibm.XXXXXXXX)
 
@@ -66,58 +76,66 @@ trap "rm -f $tmpf $tmprrd $tmpgraph" 0 1 2 5 15
 $wread "$l/temperature.ALL" | sed -e 's/ //g; s/,/\n/g' > $tmpf
 readarray -t temperatures < $tmpf
 
+#write data file header
 rm -f "$bfn.png" "$bfn.txt"
 echo "Missionstart;$datestart;Mission start;$missionstart;Mission end;$missionend;Frequency[min];$freq;Elements;$elements" > "$bfn.txt"
 
 #decrease elements by one for sake of the loop
 ((elements--))
+#write data into file
 for i in $(seq 0 $elements); do
 	((tm=missionstart+(i*freq*60)))
 	echo -e "$tm;${temperatures[$i]}"
 done >> "$bfn.txt"
 
-#create and update rrd
-$rrdtool create "$tmprrd" --start $rrdstart --step $rrdstep \
-	DS:temperature:GAUGE:$rrdheartbeat:U:U \
-	RRA:LAST:0:1:2100
 
-tail -n +2 "$bfn.txt" | tr ";" ":" | xargs $rrdtool update "$tmprrd" 
+#if enabled, create graph using rrdtool
+if [ $rrd_create_graph -eq 1 ]; then
+	#variables for rrd
+	((rrdstep=freq*60))
+	((rrdstart=missionstart-rrdstep))
+	rrdheartbeat=$rrdstep
+
+	#create and update rrd
+	$rrdtool create "$tmprrd" --start $rrdstart --step $rrdstep \
+		DS:temperature:GAUGE:$rrdheartbeat:U:U \
+		RRA:LAST:0:1:2100
+
+	tail -n +2 "$bfn.txt" | tr ";" ":" | xargs $rrdtool update "$tmprrd"
 
 
-# graph
-#determine time differenc from UTC and set TZ accordingly for rrdgraph
-ts=$(date +%k)
-tsu=$(date +%k -u)
-((tdiff=ts-tsu))
-case $tdiff in
-	0) TZ=UTC ;;
-	1) TZ=CET-1 ;;
-	2) TZ=CET-1CEST ;;
-esac
+	# graph
+	#determine time differenc from UTC and set TZ accordingly for rrdgraph
+	ts=$(date +%k)
+	tsu=$(date +%k -u)
+	((tdiff=ts-tsu))
+	case $tdiff in
+		0) TZ=UTC ;;
+		1) TZ=CET-1 ;;
+		2) TZ=CET-1CEST ;;
+	esac
 
-$rrdtool graph "$tmpgraph" --width $graphwidth --height $graphheight --start $rrdstart --end $missionend --step $rrdstep --right-axis 1:0\
-	DEF:temp="$tmprrd":temperature:LAST \
-	VDEF:tmax=temp,MAXIMUM \
-	VDEF:tmin=temp,MINIMUM \
-	VDEF:tavg=temp,AVERAGE \
-	COMMENT:"\n" \
-	LINE1:temp#ff0000:"Temperature   " \
-	COMMENT:"  Maximum " \
-	GPRINT:tmax:"%5.2lf" \
-	COMMENT:"  Average " \
-	GPRINT:tavg:"%5.2lf" \
-	COMMENT:"  Minimum " \
-	GPRINT:tmin:"%5.2lf" \
-	HRULE:${graph_upperlimit}${graph_ulimit_color} \
-	HRULE:${graph_lowerlimit}${graph_llimit_color}
+	$rrdtool graph "$tmpgraph" --width $graphwidth --height $graphheight --start $rrdstart --end $missionend --step $rrdstep --right-axis 1:0\
+		DEF:temp="$tmprrd":temperature:LAST \
+		VDEF:tmax=temp,MAXIMUM \
+		VDEF:tmin=temp,MINIMUM \
+		VDEF:tavg=temp,AVERAGE \
+		COMMENT:"\n" \
+		LINE1:temp#ff0000:"Temperature   " \
+		COMMENT:"  Maximum " \
+		GPRINT:tmax:"%5.2lf" \
+		COMMENT:"  Average " \
+		GPRINT:tavg:"%5.2lf" \
+		COMMENT:"  Minimum " \
+		GPRINT:tmin:"%5.2lf" \
+		HRULE:${graph_upperlimit}${graph_ulimit_color} \
+		HRULE:${graph_lowerlimit}${graph_llimit_color}
 
-mv $tmpgraph "$bfn.png" 
+	mv $tmpgraph "$bfn.png"
+fi
+
 
 #if enabled, upload the text file containing the data
-# if $upload_data ist not configured, set to 0
-if [ -z "$upload_data" ]; then
-	upload_data=0
-fi
 if [ $upload_data -eq 1 ]; then
 	curl $curl_params --form templog=@"$bfn.txt" "$upload_url"
 fi
