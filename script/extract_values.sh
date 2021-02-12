@@ -61,7 +61,7 @@ tmpgraph=tmp.graph
 trap "rm -f $tmpf $tmprrd $tmpgraph" 0 1 2 5 15
 
 #read in all elements at once ant put them into array
-#the following two commands can not be done in one pipe, because readarray would be 
+#the following two commands can not be done in one pipe, because readarray would be
 #executed in a subshell, from there the created variable would be lost
 $wread "$l/temperature.ALL" | sed -e 's/ //g; s/,/\n/g' > $tmpf
 readarray -t temperatures < $tmpf
@@ -73,7 +73,7 @@ echo "Missionstart;$datestart;Mission start;$missionstart;Mission end;$missionen
 ((elements--))
 for i in $(seq 0 $elements); do
 	((tm=missionstart+(i*freq*60)))
-	echo -e "$tm;${temperatures[$i]}" 
+	echo -e "$tm;${temperatures[$i]}"
 done >> "$bfn.txt"
 
 #create and update rrd
